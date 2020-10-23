@@ -1,0 +1,9 @@
+
+module.exports = {
+    name: "lockdown",
+    category: "moderation",
+    run: async (client, message, args) => {
+    
+}
+}
+
