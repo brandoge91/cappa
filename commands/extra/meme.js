@@ -1,26 +1,28 @@
 const axios = require('axios');
 const { MessageEmbed } = require('discord.js')
-
+const got = require("got")
+const Discord = require("discord.js")
 module.exports = {
     name: "meme",
     category: "extra",
     run: async (client, message, args) => {
-        const url = 'https://some-random-api.ml/meme';
+   
 
-        let data, response;
-        try {
-            response = await axios.get(url);
-            data = response.data;
-        } catch (e) {
-            return message.channel.send(`An error has occured, try again!`)
-        }
-
-        const embed = new MessageEmbed()
-            .setTitle(`Random Meme: `)
-            .setDescription(data.caption)
-            .setColor('#f3f3f3')
-            .setImage(data.image)
-
-        await message.channel.send(embed)
-    }
+      const embed = new Discord.MessageEmbed();
+    got('https://www.reddit.com/r/memes/random/.json').then(response => {
+        let content = JSON.parse(response.body);
+        let permalink = content[0].data.children[0].data.permalink;
+        let memeUrl = `https://reddit.com${permalink}`;
+        let memeImage = content[0].data.children[0].data.url;
+        let memeTitle = content[0].data.children[0].data.title;
+        let memeUpvotes = content[0].data.children[0].data.ups;
+        let memeNumComments = content[0].data.children[0].data.num_comments;
+        embed.setTitle(`${memeTitle}`);
+        embed.setURL(`${memeUrl}`)
+        embed.setColor('RANDOM')
+        embed.setImage(memeImage);
+        embed.setFooter(` ${memeUpvotes}  ${memeNumComments}`);
+        message.channel.send(embed)
+    }).catch(console.error); 
+   }
 }

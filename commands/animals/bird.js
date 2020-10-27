@@ -18,6 +18,7 @@ module.exports = {
             fact = responses.data
 
         } catch (e) {
+            console.log(e)
             return message.channel.send(`An error occured, please try again!`)
         }
 
